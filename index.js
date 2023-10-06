@@ -3,9 +3,11 @@ const cors = require('cors')
 require("dotenv").config()
 
 const { connection } = require("./configs/mongoDB")
+const { verifyToken } = require('./middlewares/jwt.middleware')
 const { notFound } = require('./middlewares/error.middleware')
 
-const { userRouter }=require("./routes/user.routes")
+const { userRouter } = require("./routes/user.routes")
+const { tasksRouter } = require("./routes/tasks.routes")
 
 const app = express()
 app.use(express.json())
@@ -15,10 +17,13 @@ app.get("/", (req, res) => {
     return res.status(200).send("Welcome to Task Management API, for docs visit /api-docs")
 })
 
-//All the user Routes
-app.use('/user',userRouter)
+// All the user Routes
+app.use('/user', userRouter)
 
-// If the route doesn't exist
+// All the task routes are JWT protected
+app.use('/tasks', verifyToken, tasksRouter)
+
+// If the requested route doesn't exist
 app.use(notFound)
 
 app.listen(process.env.PORT, async () => {

@@ -13,9 +13,15 @@ const taskSchema = mongoose.Schema({
         type: String,
         enum: ["pending", "completed"],
         default: "pending"
+    },
+    user:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'user', 
+        required: true
     }
 }, {
-    timeStamps: true   //createdAt and updatedAt 
+    timestamps: true,//createdAt and updatedAt
+    versionkey: true
 })
 
 const TaskModel = mongoose.model('task', taskSchema)
