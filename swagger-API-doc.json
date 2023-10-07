@@ -11,7 +11,7 @@
     },
     "servers": [
         {
-            "url": "",
+            "url": "https://determined-lime-peplum.cyclic.cloud/",
             "description": "Cyclic deployed URL"
         },
         {
