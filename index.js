@@ -3,7 +3,7 @@ const cors = require('cors')
 require("dotenv").config()
 
 const { connection } = require("./configs/mongoDB")
-const { verifyToken } = require('./middlewares/JWT.middleware')
+const { verifyToken } = require('./middlewares/jwt.middleware')
 const { notFound } = require('./middlewares/error.middleware')
 const { limiter } = require("./middlewares/rateLimiter.middleware")
 const { swaggerServe, swaggerUI } = require("./util/swagger.config")
