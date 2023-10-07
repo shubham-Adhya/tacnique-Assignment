@@ -5,6 +5,7 @@ require("dotenv").config()
 const { connection } = require("./configs/mongoDB")
 const { verifyToken } = require('./middlewares/jwt.middleware')
 const { notFound } = require('./middlewares/error.middleware')
+const { limiter } = require("./middlewares/rateLimiter")
 
 const { userRouter } = require("./routes/user.routes")
 const { tasksRouter } = require("./routes/tasks.routes")
@@ -21,7 +22,7 @@ app.get("/", (req, res) => {
 app.use('/user', userRouter)
 
 // All the task routes are JWT protected
-app.use('/tasks', verifyToken, tasksRouter)
+app.use('/tasks', limiter, verifyToken, tasksRouter)
 
 // If the requested route doesn't exist
 app.use(notFound)
