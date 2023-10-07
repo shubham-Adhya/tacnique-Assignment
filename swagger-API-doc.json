@@ -1,0 +1,682 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "tacnique-assignment-Task Management API",
+        "description": "Welcome to the Task Management API Assignment Documentation! This Assignment is built using Node.js and Express. This Documentation provides an overview of the API routes available in the application \n All the task routes are rate limited. `Each IP is limited to 50 requests per window (here, per 5 minutes)`",
+        "contact": {
+            "name": "Shubham Adhya",
+            "email": "shubhamadhya@gmail.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "",
+            "description": "Cyclic deployed URL"
+        },
+        {
+            "url": "http://localhost:8080/",
+            "description": "Local server"
+        }
+    ],
+    "components": {
+        "schemas": {
+            "users": {
+                "type": "object",
+                "required": [
+                    "name",
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "_id": {
+                        "type": "string",
+                        "description": "the auto-generated id of the user (MongoDB ObjectID)"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "The user fullname"
+                    },
+                    "email": {
+                        "type": "string",
+                        "description": "The user email"
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "The encrypted user password"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "description": "creation time"
+                    },
+                    "updatedAt": {
+                        "type": "string",
+                        "description": "last update time"
+                    }
+                }
+            },
+            "tasks": {
+                "type": "object",
+                "required": [
+                    "title",
+                    "description"
+                ],
+                "properties": {
+                    "_id": {
+                        "type": "string",
+                        "description": "The auto-generated id of the task (MongoDB ObjectID)"
+                    },
+                    "title": {
+                        "type": "string",
+                        "description": "The task title"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "The task description"
+                    },
+                    "user": {
+                        "type": "string",
+                        "$ref": "#/components/schemas/users/properties/_id",
+                        "description": "userId of the user - MongoDB ObjectId (_id)"
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "bearer_token_Auth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT",
+                "description": "add your JWT token here, it will be prefixed with 'Bearer '"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "User",
+            "description": "All the API routes related to Users"
+        },
+        {
+            "name": "Task",
+            "description": "All the API routes related to Tasks"
+        }
+    ],
+    "paths": {
+        "/user/signup": {
+            "post": {
+                "summary": "User SignUp",
+                "tags": [
+                    "User"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "example": {
+                                    "name": "Joao Cancelo",
+                                    "email": "joaocancelo@gmail.com",
+                                    "password": "joaocancelo"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "A new user signs up",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": {
+                                        "message": "User created successfully"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "User already exists or Missing required field",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": [
+                                        {
+                                            "message": "User already exists"
+                                        },
+                                        {
+                                            "message": "Missing required field"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": {
+                                        "message": "Something went wrong",
+                                        "error": "<Error message>"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/login": {
+            "post": {
+                "summary": "User Login",
+                "tags": [
+                    "User"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "example": {
+                                    "email": "joaocancelo@gmail.com",
+                                    "password": "joaocancelo"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": {
+                                        "message": "Login success",
+                                        "token": "<JWT Token>"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid username or password",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": [
+                                        {
+                                            "message": "Invalid username or password"
+                                        },
+                                        {
+                                            "message": "Incorrect Password"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": {
+                                        "message": "Something went wrong",
+                                        "error": "<Error message>"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tasks": {
+            "post": {
+                "summary": "Add a new task by user, provide JWT Bearer Token",
+                "tags": [
+                    "Task"
+                ],
+                "security": [
+                    {
+                        "bearer_token_Auth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "example": {
+                                    "title": "C++",
+                                    "description": "What is C++ used for? Operating systems. C++ plays an important part in well-known operating systems, from MacOS and Windows to mobile... Game development. C++ is one of the most widely-used programming languages in game development. It has been used to... IoT devices. IoT (Internet of Things)"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "A New Task Added Successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": {
+                                        "message": "New Task Created",
+                                        "task": {
+                                            "title": "C++",
+                                            "description": "What is C++ used for? Operating systems. C++ plays an important part in well-known operating systems, from MacOS and Windows to mobile... Game development. C++ is one of the most widely-used programming languages in game development. It has been used to... IoT devices. IoT (Internet of Things)",
+                                            "status": "pending",
+                                            "user": "65219ef4d9e0483d895097a9",
+                                            "_id": "65219f2cd9e0483d895097ad",
+                                            "createdAt": "2023-10-07T18:10:52.751Z",
+                                            "updatedAt": "2023-10-07T18:10:52.751Z",
+                                            "__v": 0
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error creating new task or missing required field",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": {
+                                        "message": "Missing required field"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "If token error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": [
+                                        {
+                                            "message": "Unauthorized"
+                                        },
+                                        {
+                                            "message": "Unauthorized",
+                                            "error": "<Error message>"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": {
+                                        "message": "Something went wrong",
+                                        "error": "<Error message>"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get Tasks list (Filter on status and pagination is available)",
+                "tags": [
+                    "Task"
+                ],
+                "security": [
+                    {
+                        "bearer_token_Auth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Status to filter by (comma-separated), eg. pending,completed",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "_page",
+                        "in": "query",
+                        "description": "Page number",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "_limit",
+                        "in": "query",
+                        "description": "Number of tasks per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Array of tasks",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": {
+                                        "tasks": [
+                                            {
+                                                "_id": "65219f2cd9e0483d895097ad",
+                                                "title": "C++",
+                                                "description": "What is C++ used for? Operating systems. C++ plays an important part in well-known operating systems, from MacOS and Windows to mobile... Game development. C++ is one of the most widely-used programming languages in game development. It has been used to... IoT devices. IoT (Internet of Things)",
+                                                "status": "pending",
+                                                "createdAt": "2023-10-07T18:10:52.751Z",
+                                                "updatedAt": "2023-10-07T18:10:52.751Z"
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "If token error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": [
+                                        {
+                                            "message": "Unauthorized"
+                                        },
+                                        {
+                                            "message": "Unauthorized",
+                                            "error": "<Error message>"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": {
+                                        "message": "Something went wrong",
+                                        "error": "<Error message>"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tasks/{id}": {
+            "get": {
+                "summary": "Retrieve a specific task by ID",
+                "tags": [
+                    "Task"
+                ],
+                "security": [
+                    {
+                        "bearer_token_Auth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The task id (MongoDB ObjectID)",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Task Information",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": {
+                                        "task": {
+                                            "_id": "65219f2cd9e0483d895097ad",
+                                            "title": "C++",
+                                            "description": "What is C++ used for? Operating systems. C++ plays an important part in well-known operating systems, from MacOS and Windows to mobile... Game development. C++ is one of the most widely-used programming languages in game development. It has been used to... IoT devices. IoT (Internet of Things)",
+                                            "status": "pending",
+                                            "createdAt": "2023-10-07T18:10:52.751Z",
+                                            "updatedAt": "2023-10-07T18:10:52.751Z"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "If token error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": [
+                                        {
+                                            "message": "Unauthorized"
+                                        },
+                                        {
+                                            "message": "Unauthorized",
+                                            "error": "<Error message>"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": {
+                                        "message": "Something went wrong",
+                                        "error": "<Error message>"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": "Update a specific task by ID",
+                "tags": [
+                    "Task"
+                ],
+                "security": [
+                    {
+                        "bearer_token_Auth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "example": {
+                                    "description": "Operating systems. C++ plays an important part in well-known operating systems, from MacOS and Windows to mobile... Game development. C++ is one of the most widely-used programming languages in game development. It has been used to... IoT devices. IoT (Internet of Things)",
+                                    "status": "completed"
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The task id (MongoDB ObjectID)",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Task Updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": {
+                                        "message": "Task Updated",
+                                        "task": {
+                                            "_id": "65219f2cd9e0483d895097ad",
+                                            "title": "C++",
+                                            "description": "Operating systems. C++ plays an important part in well-known operating systems, from MacOS and Windows to mobile... Game development. C++ is one of the most widely-used programming languages in game development. It has been used to... IoT devices. IoT (Internet of Things)",
+                                            "status": "completed",
+                                            "createdAt": "2023-10-07T18:10:52.751Z",
+                                            "updatedAt": "2023-10-07T18:38:27.501Z"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "If token error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": [
+                                        {
+                                            "message": "Unauthorized"
+                                        },
+                                        {
+                                            "message": "Unauthorized",
+                                            "error": "<Error message>"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": {
+                                        "message": "Something went wrong",
+                                        "error": "<Error message>"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete a specific task by ID",
+                "tags": [
+                    "Task"
+                ],
+                "security": [
+                    {
+                        "bearer_token_Auth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The task id (MongoDB ObjectID)",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Task Deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": {
+                                        "message": "Task Deleted"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "If token error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": [
+                                        {
+                                            "message": "Unauthorized"
+                                        },
+                                        {
+                                            "message": "Unauthorized",
+                                            "error": "<Error message>"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": {
+                                        "message": "Something went wrong",
+                                        "error": "<Error message>"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

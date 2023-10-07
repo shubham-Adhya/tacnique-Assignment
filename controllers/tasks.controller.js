@@ -17,7 +17,7 @@ const addTask = async (req, res) => {
 
         return res.status(201).json({ message: "New Task Created", task });
     } catch (error) {
-        return res.status(400).json({ message: error.message });
+        return res.status(500).json({ message: "Something went wrong", error: error.message });
     }
 }
 
@@ -47,7 +47,7 @@ const getAllTasks = async (req, res) => {
 
         return res.status(200).json({ tasks });
     } catch (error) {
-        return res.status(400).json({ message: error.message });
+        return res.status(500).json({ message: "Something went wrong", error: error.message });
     }
 }
 
@@ -57,13 +57,13 @@ const getAllTasks = async (req, res) => {
 const getTaskById = async (req, res) => {
     try {
         const { id } = req.params;
-        const task = await TaskModel.find({
+        const task = await TaskModel.findOne({
             user: req.user._id,
             _id: id
         }).select('-user -__v');
         return res.status(200).json({ task });
     } catch (error) {
-        return res.status(400).json({ error: error.message, message: "Invalid Task Id" });
+        return res.status(500).json({ message: "Something went wrong", error: error.message });
     }
 }
 
@@ -87,7 +87,7 @@ const updateTaskById = async (req, res) => {
 
         return res.status(200).json({ message: "Task Updated", task });
     } catch (error) {
-        return res.status(400).json({ error: error.message, message: "Invalid Task Id" });
+        return res.status(500).json({ message: "Something went wrong", error: error.message });
     }
 }
 
@@ -105,7 +105,7 @@ const deleteTaskById = async (req, res) => {
         );
         return res.status(200).json({ message: "Task Deleted" });
     } catch (error) {
-        return res.status(400).json({ error: error.message, message: "Invalid Task Id" });
+        return res.status(500).json({ message: "Something went wrong", error: error.message });
     }
 }
 

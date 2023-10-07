@@ -3,9 +3,10 @@ const cors = require('cors')
 require("dotenv").config()
 
 const { connection } = require("./configs/mongoDB")
-const { verifyToken } = require('./middlewares/jwt.middleware')
+const { verifyToken } = require('./middlewares/JWT.middleware')
 const { notFound } = require('./middlewares/error.middleware')
-const { limiter } = require("./middlewares/rateLimiter")
+const { limiter } = require("./middlewares/rateLimiter.middleware")
+const { swaggerServe, swaggerUI } = require("./util/swagger.config")
 
 const { userRouter } = require("./routes/user.routes")
 const { tasksRouter } = require("./routes/tasks.routes")
@@ -15,7 +16,7 @@ app.use(express.json())
 app.use(cors())
 
 app.get("/", (req, res) => {
-    return res.status(200).send("Welcome to Task Management API, for docs visit /api-docs")
+    return res.status(200).send("Welcome to Task Management API, for docs visit /docs")
 })
 
 // All the user Routes
@@ -23,6 +24,9 @@ app.use('/user', userRouter)
 
 // All the task routes are JWT protected
 app.use('/tasks', limiter, verifyToken, tasksRouter)
+
+// Swagger documentation of all routes available
+app.use("/docs", swaggerServe, swaggerUI)
 
 // If the requested route doesn't exist
 app.use(notFound)
