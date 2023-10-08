@@ -427,7 +427,7 @@
                                 "schema": {
                                     "type": "object",
                                     "example": {
-                                        "message": "Something went wrong",
+                                        "message": "Tasks not found",
                                         "error": "<Error message>"
                                     }
                                 }
@@ -506,7 +506,7 @@
                                 "schema": {
                                     "type": "object",
                                     "example": {
-                                        "message": "Something went wrong",
+                                        "message": "Task not found",
                                         "error": "<Error message>"
                                     }
                                 }
@@ -598,7 +598,7 @@
                                 "schema": {
                                     "type": "object",
                                     "example": {
-                                        "message": "Something went wrong",
+                                        "message": "Task not found",
                                         "error": "<Error message>"
                                     }
                                 }
@@ -668,7 +668,7 @@
                                 "schema": {
                                     "type": "object",
                                     "example": {
-                                        "message": "Something went wrong",
+                                        "message": "Task not found",
                                         "error": "<Error message>"
                                     }
                                 }

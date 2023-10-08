@@ -47,7 +47,7 @@ const getAllTasks = async (req, res) => {
 
         return res.status(200).json({ tasks });
     } catch (error) {
-        return res.status(500).json({ message: "Something went wrong", error: error.message });
+        return res.status(500).json({ message: "Tasks not found", error: error.message });
     }
 }
 
@@ -61,9 +61,10 @@ const getTaskById = async (req, res) => {
             user: req.user._id,
             _id: id
         }).select('-user -__v');
+
         return res.status(200).json({ task });
     } catch (error) {
-        return res.status(500).json({ message: "Something went wrong", error: error.message });
+        return res.status(500).json({ message: "Task not found", error: error.message });
     }
 }
 
@@ -87,7 +88,7 @@ const updateTaskById = async (req, res) => {
 
         return res.status(200).json({ message: "Task Updated", task });
     } catch (error) {
-        return res.status(500).json({ message: "Something went wrong", error: error.message });
+        return res.status(500).json({ message: "Task not found", error: error.message });
     }
 }
 
@@ -105,7 +106,7 @@ const deleteTaskById = async (req, res) => {
         );
         return res.status(200).json({ message: "Task Deleted" });
     } catch (error) {
-        return res.status(500).json({ message: "Something went wrong", error: error.message });
+        return res.status(500).json({ message: "Task not found", error: error.message });
     }
 }
 
