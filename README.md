@@ -1,6 +1,8 @@
 # tacnique-Assignment
 
-Welcome to the Task Management API Assignment Documentation! This Assignment is built using Node.js and Express. This Documentation provides an overview of the API routes available in the application 
+Welcome to the Task Management API Assignment Documentation! This Assignment is built using 
+`Node.js, Express, MongoDB`
+This Documentation provides an overview of the API routes available in the application 
 
 **All the task routes are rate limited**
 
