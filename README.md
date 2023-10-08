@@ -1,6 +1,10 @@
 # tacnique-Assignment
 
-Welcome to the Task Management API Assignment Documentation! This Assignment is built using Node.js and Express. This Documentation provides an overview of the API routes available in the application \n All the task routes are rate limited. `Each IP is limited to 50 requests per window (here, per 5 minutes)`
+Welcome to the Task Management API Assignment Documentation! This Assignment is built using Node.js and Express. This Documentation provides an overview of the API routes available in the application 
+
+**All the task routes are rate limited**
+
+**`Each IP is limited to 50 requests per window (here, per 5 minutes)`**
 
 For Swagger Docs , Please visit
 
